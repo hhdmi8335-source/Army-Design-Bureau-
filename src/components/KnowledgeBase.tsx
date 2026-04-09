@@ -30,9 +30,15 @@ const KnowledgeBase: React.FC<KnowledgeBaseProps> = ({ detectedVehicle }) => {
   } | null>(null);
 
   const fetchVehicleInfo = async (vehicleName: string) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey || apiKey === "undefined") {
+      console.error("Gemini API key is missing. Please configure it in the Settings menu.");
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const ai = new GoogleGenAI({ apiKey });
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: `Provide detailed military specifications, history, and key features for the vehicle: ${vehicleName}. Ensure the response is accurate and technical.`,
