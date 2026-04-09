@@ -10,6 +10,9 @@ export default defineConfig(({ mode }) => ({
     port: 3000,
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  define: {
+    "process.env.GEMINI_API_KEY": JSON.stringify(process.env.GEMINI_API_KEY),
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
