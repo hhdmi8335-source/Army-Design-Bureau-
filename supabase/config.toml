@@ -1,0 +1,13 @@
+project_id = "bsmbmvmgyjsmlgfwqzdu"
+
+[functions.analyze-target]
+verify_jwt = false
+
+[functions.analyze-video]
+verify_jwt = false
+
+[functions.analyze-image]
+verify_jwt = false
+
+[functions.send-telegram-alert]
+verify_jwt = false
