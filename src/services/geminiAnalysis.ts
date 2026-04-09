@@ -1,8 +1,16 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
 // Initialize Gemini API
-// Note: process.env.GEMINI_API_KEY is automatically provided in this environment
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
+const getGeminiKey = () => {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key || key === "undefined") {
+    console.warn("GEMINI_API_KEY is missing. Please set it in the Settings menu.");
+    return "";
+  }
+  return key;
+};
+
+const ai = new GoogleGenAI({ apiKey: getGeminiKey() });
 
 export interface Detection {
   label: string;
