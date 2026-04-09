@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { GoogleGenAI, Type } from "@google/genai";
 import { motion, AnimatePresence } from 'motion/react';
+import { useToast } from "@/components/ui/use-toast";
 
 interface KnowledgeBaseProps {
   detectedVehicle?: string | null;
@@ -28,10 +29,16 @@ const KnowledgeBase: React.FC<KnowledgeBaseProps> = ({ detectedVehicle }) => {
     history: string;
     keyFeatures: string[];
   } | null>(null);
+  const { toast } = useToast();
 
   const fetchVehicleInfo = async (vehicleName: string) => {
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey || apiKey === "undefined") {
+    if (!apiKey || apiKey === "undefined" || apiKey === "") {
+      toast({
+        title: "Analysis Failed",
+        description: "API key is missing. Please provide a valid API key in the Settings menu.",
+        variant: "destructive",
+      });
       console.error("Gemini API key is missing. Please configure it in the Settings menu.");
       return;
     }
