@@ -136,6 +136,12 @@ const FULL_SCHEMA = {
 };
 
 export async function analyzeImages(imagesBase64: string[], mode: 'detect' | 'report' | 'full' = 'detect'): Promise<AnalysisResult | AnalysisReport> {
+  const apiKey = getGeminiKey();
+  if (!apiKey) {
+    throw new Error("API key is missing. Please provide a valid API key in the Settings menu.");
+  }
+  const aiInstance = new GoogleGenAI({ apiKey });
+
   const prompt = mode === 'detect' 
     ? "Analyze these tactical surveillance images. Detect all military and civilian vehicles, personnel, and potential threats. Provide precise coordinates (x, y as percentages), threat levels, and detailed specifications like armor type and origin if identifiable. Focus on the most significant threats across all images."
     : mode === 'report'
@@ -148,7 +154,7 @@ export async function analyzeImages(imagesBase64: string[], mode: 'detect' | 're
     return { inlineData: { data: base64Data, mimeType } };
   });
 
-  const response = await ai.models.generateContent({
+  const response = await aiInstance.models.generateContent({
     model: "gemini-3-flash-preview",
     contents: [
       {
@@ -172,6 +178,12 @@ export async function analyzeImage(imageBase64: string, mode: 'detect' | 'report
 }
 
 export async function analyzeVideoFrames(framesBase64: string[], mode: 'detect' | 'report' | 'full' = 'detect'): Promise<AnalysisResult | AnalysisReport> {
+  const apiKey = getGeminiKey();
+  if (!apiKey) {
+    throw new Error("API key is missing. Please provide a valid API key in the Settings menu.");
+  }
+  const aiInstance = new GoogleGenAI({ apiKey });
+
   const prompt = mode === 'detect'
     ? "Analyze these sequential video frames for tactical threat detection. Identify vehicles, track movements, and assess threat levels. Provide details for the most recent frame."
     : mode === 'report'
@@ -184,7 +196,7 @@ export async function analyzeVideoFrames(framesBase64: string[], mode: 'detect' 
     return { inlineData: { data: base64Data, mimeType } };
   });
 
-  const response = await ai.models.generateContent({
+  const response = await aiInstance.models.generateContent({
     model: "gemini-3-flash-preview",
     contents: [{ parts: [...contents, { text: prompt }] }],
     config: {
